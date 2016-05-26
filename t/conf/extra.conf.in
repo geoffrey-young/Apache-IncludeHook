@@ -1,0 +1,32 @@
+Alias /ssi @DocumentRoot@
+<Location /ssi>
+  AddType text/html .shtml
+  AddOutputFilter INCLUDES .shtml 
+  Options +Includes
+</Location>
+
+Alias /noexec @DocumentRoot@
+<Location /noexec>
+  AddType text/html .shtml
+  AddOutputFilter INCLUDES .shtml 
+  Options +Includes +IncludesNOEXEC
+</Location>
+
+SSIUndefinedEcho "ECHO... ECHO... ECHO"
+
+<IfModule mod_perl.c>
+  PerlModule Apache::IncludeHook
+  PerlModule My::PrintArgs
+  PerlModule My::Nada
+  PerlModule My::Subrequest
+
+  Alias /cgi-bin @ServerRoot@/cgi-bin
+  <Location /cgi-bin>
+    SetHandler cgi-script
+
+    SetOutputFilter INCLUDES
+    PerlOutputFilterHandler My::Filter
+
+    Options +ExecCGI +Includes
+  </Location>
+</IfModule>
